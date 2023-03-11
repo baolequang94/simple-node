@@ -22,13 +22,10 @@ jobs:
           docker tag simple-node lequangbao1/simple-node:latest
     - name: Build docker image
       run: docker build -t simple-node .
-    - name: notify of success
-      if: ${{ success() }}
-      run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push lequangbao1/simple-node
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
      
