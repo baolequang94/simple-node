@@ -1,0 +1,31 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Logging docker version
+      run: docker --version
+    - name: Build docker image
+      run: |
+          docker build -t simple-node .
+          docker tag simple-node lequangbao1/simple-node:latest
+    - name: Build docker image
+      run: docker build -t simple-node .
+    - name: notify of success
+      if: ${{ success() }}
+      run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker push lequangbao1/simple-node
+
+     
